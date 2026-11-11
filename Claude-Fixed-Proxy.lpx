@@ -1,0 +1,30 @@
+#!name = Claude Fixed Proxy
+#!desc = Mac 进程与跨平台域名分流。启用前必须绑定固定代理策略；DNS/STUN 设置见安装说明。不是断网开关或设备环境隔离。
+#!author = Guyue
+#!system = macOS,iOS,iPadOS,tvOS
+#!date = 2026-11-11
+
+# PROXY 由用户在插件设置中选择节点或策略组，无需预建默认策略组。
+# 不要依赖未绑定 PROXY 的默认处理。插件不声明 FINAL。
+# macOS 路径/通配符规则按 Loon for Mac 0.5.0 (1011) 文档编写。
+# iOS/iPadOS/tvOS 忽略进程规则，继续使用下面的独立域名规则。
+[Rule]
+PROCESS-NAME,/Applications/Claude.app/,PROXY
+PROCESS-NAME,Claude,PROXY
+PROCESS-NAME,Claude Helper,PROXY
+PROCESS-NAME,Claude Helper (GPU),PROXY
+PROCESS-NAME,Claude Helper (Plugin),PROXY
+PROCESS-NAME,Claude Helper (Renderer),PROXY
+# Desktop 内置 Claude Code；不是任意 node/python/MCP 子进程的继承规则。
+PROCESS-NAME,/Users/*/Library/Application Support/Claude/claude-code/*,PROXY
+
+# 跨平台核心域名；其他应用访问这些域名也会使用同一代理。
+DOMAIN-SUFFIX,claude.ai,PROXY
+DOMAIN-SUFFIX,anthropic.com,PROXY
+DOMAIN-SUFFIX,claude.com,PROXY
+DOMAIN-SUFFIX,claudeusercontent.com,PROXY
+# 补充域名；此列表不是官方完整网络清单。
+DOMAIN-SUFFIX,claudeassets.com,PROXY
+DOMAIN-SUFFIX,claudeusercontent.net,PROXY
+DOMAIN-SUFFIX,claudemcpclient.com,PROXY
+DOMAIN-SUFFIX,anthropicstatus.com,PROXY
